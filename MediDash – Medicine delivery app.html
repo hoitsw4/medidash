@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MediDash – Medicines in 10 minutes</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7f6;--card:#fff;--ink:#12302c;--mut:#5f7773;--line:#dfe8e5;--pri:#0f766e;--priD:#0b5a54;--acc:#ffd84d;--red:#c0392b;--tile:#e7f3f0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a18;--card:#162623;--ink:#e6f2ef;--mut:#92aaa5;--line:#25403b;--pri:#2bb5a8;--priD:#1f8f85;--tile:#1d3532}}
+:root[data-theme="dark"]{--bg:#0e1a18;--card:#162623;--ink:#e6f2ef;--mut:#92aaa5;--line:#25403b;--pri:#2bb5a8;--priD:#1f8f85;--tile:#1d3532}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.45 Manrope,system-ui,sans-serif}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--pri);color:#fff;padding:10px 16px}
+.bar{max-width:1180px;margin:auto;display:flex;gap:14px;align-items:center}
+.logo{font-weight:800;font-size:22px;letter-spacing:-.5px}.logo b{background:var(--acc);color:#12302c;padding:0 6px;border-radius:6px;margin-left:2px}
+.loc{font-size:12px;line-height:1.2;cursor:pointer;background:none;color:#fff;text-align:left;max-width:190px}.loc strong{display:block;font-size:14px}
+.search{flex:1;min-width:0}.search input{width:100%;padding:11px 14px;border-radius:10px;border:0;font:inherit;background:#fff;color:#12302c}
+.hbtn{background:rgba(255,255,255,.16);padding:10px 14px;border-radius:10px;font-weight:700;color:#fff;white-space:nowrap}
+.hbtn.cart{background:var(--acc);color:#12302c}
+main{max-width:1180px;margin:auto;padding:16px}
+.hero{background:var(--priD);color:#fff;border-radius:18px;padding:26px;display:flex;justify-content:space-between;align-items:center;gap:16px;overflow:hidden}
+.hero h1{margin:0 0 6px;font-size:clamp(22px,4vw,34px);letter-spacing:-.8px}.hero p{margin:0;opacity:.88;max-width:46ch}
+.hero .big{font-size:64px;line-height:1}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:16px 0 8px;scrollbar-width:none}
+.chip{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:99px;font-weight:700;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+h2{font-size:19px;margin:18px 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
+.p{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column}
+.p .img{background:var(--tile);border-radius:10px;height:112px;display:grid;place-items:center;font-size:52px;position:relative}
+.rx{position:absolute;top:6px;left:6px;background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
+.off{position:absolute;top:6px;right:6px;background:var(--acc);color:#12302c;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
+.p h3{font-size:14px;margin:8px 0 2px;line-height:1.3}.p small{color:var(--mut)}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px}
+.price b{font-size:15px}.price s{color:var(--mut);font-size:12px;margin-left:4px}
+.add{border:1.5px solid var(--pri);color:var(--pri);background:transparent;padding:6px 16px;border-radius:8px;font-weight:800}
+.qty{display:flex;align-items:center;background:var(--pri);color:#fff;border-radius:8px;overflow:hidden}
+.qty button{background:none;color:#fff;width:30px;height:30px;font-size:18px;font-weight:800}.qty span{min-width:20px;text-align:center;font-weight:800}
+.empty{text-align:center;color:var(--mut);padding:40px 0}
+.ov{position:fixed;inset:0;background:rgba(5,20,18,.55);z-index:40;display:none}.ov.show{display:block}
+.drawer{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--card);border-bottom:1px solid var(--line);font-weight:800;font-size:18px}
+.x{background:var(--tile);width:34px;height:34px;border-radius:50%;font-size:18px}
+.db{flex:1;overflow:auto;padding:14px 16px}
+.df{padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--line)}
+.ci{display:flex;gap:10px;align-items:center;background:var(--card);border-radius:12px;padding:8px;margin-bottom:8px;border:1px solid var(--line)}
+.ci .e{font-size:30px;background:var(--tile);border-radius:8px;width:48px;height:48px;display:grid;place-items:center}.ci div.t{flex:1;min-width:0;font-weight:700;font-size:14px}
+.bill{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.bill div{display:flex;justify-content:space-between;padding:3px 0;color:var(--mut)}.bill .tot{color:var(--ink);font-weight:800;font-size:16px;border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}
+.cta{width:100%;background:var(--pri);color:#fff;padding:14px;border-radius:12px;font-weight:800;font-size:16px}
+.cta:disabled{opacity:.5;cursor:not-allowed}
+.coupon{display:flex;gap:8px;margin-top:10px}.coupon input{flex:1}
+input,select,textarea{font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:100%}
+label{display:block;font-weight:700;font-size:13px;margin:10px 0 4px}
+.sm{padding:10px 14px;border-radius:10px;background:var(--ink);color:var(--bg);font-weight:700}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pay label{margin:0;border:1.5px solid var(--line);border-radius:10px;padding:10px;text-align:center;cursor:pointer;background:var(--card)}
+.pay input{display:none}.pay input:checked+span{color:var(--pri)}.pay label:has(input:checked){border-color:var(--pri);background:var(--tile)}
+.note{background:#fff3cd;color:#5c4400;border-radius:10px;padding:10px;font-size:13px;margin-top:10px}
+.err{color:var(--red);font-size:13px;margin-top:4px}
+.modal{position:absolute;inset:0;margin:auto;width:min(520px,100%);max-height:100%;height:fit-content;background:var(--bg);border-radius:18px;overflow:auto}
+@media(max-width:600px){.modal{border-radius:18px 18px 0 0;top:auto}.loc{display:none}.hero .big{display:none}}
+.track{padding:16px}
+.map{background:var(--tile);border-radius:14px;overflow:hidden}
+.steps{margin:14px 0 0;padding:0;list-style:none}
+.steps li{display:flex;gap:12px;align-items:center;padding:8px 0;color:var(--mut);font-weight:700}
+.steps li i{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:12px;background:var(--card)}
+.steps li.done{color:var(--ink)}.steps li.done i{background:var(--pri);border-color:var(--pri);color:#fff}
+.eta{font-size:28px;font-weight:800;letter-spacing:-.5px}
+.ord{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.ord .top{display:flex;justify-content:space-between;font-weight:800}.ord p{margin:4px 0;color:var(--mut);font-size:13px}
+.tag{font-size:12px;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--tile);color:var(--pri)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;z-index:90;display:none}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:24px 16px 40px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="logo">Medi<b>Dash</b></div>
+  <button class="loc" id="locBtn" aria-label="Change delivery address"><span>Delivery in 10 min</span><strong id="locTxt">Set location ▾</strong></button>
+  <div class="search"><input id="q" type="search" placeholder="Search medicines, vitamins, devices…" aria-label="Search products"></div>
+  <button class="hbtn" id="ordBtn">Orders</button>
+  <button class="hbtn cart" id="cartBtn">🛒 <span id="cartTxt">Cart</span></button>
+</div></header>
+
+<main>
+  <section class="hero"><div><h1>Medicines at your door in 10 minutes</h1><p>Order from 2,000+ medicines and health products. Prescription items are verified by our pharmacist before dispatch.</p></div><div class="big">💊</div></section>
+  <div class="chips" id="chips" role="tablist"></div>
+  <h2 id="ttl">All products</h2>
+  <div class="grid" id="grid"></div>
+</main>
+<footer>MediDash demo · Always consult a doctor before taking any medicine. Prescription drugs need a valid prescription.</footer>
+
+<div class="ov" id="cartOv"><aside class="drawer" role="dialog" aria-label="Cart">
+  <div class="dh">My cart <button class="x" data-close aria-label="Close">×</button></div>
+  <div class="db" id="cartBody"></div>
+  <div class="df" id="cartFoot"></div>
+</aside></div>
+
+<div class="ov" id="coOv"><div class="modal" role="dialog" aria-label="Checkout">
+  <div class="dh">Checkout <button class="x" data-close aria-label="Close">×</button></div>
+  <div class="db" id="coBody"></div>
+</div></div>
+
+<div class="ov" id="trOv"><div class="modal" role="dialog" aria-label="Order tracking">
+  <div class="dh"><span id="trTitle">Order tracking</span> <button class="x" data-close aria-label="Close">×</button></div>
+  <div class="track" id="trBody"></div>
+</div></div>
+
+<div class="ov" id="ordOv"><aside class="drawer" role="dialog" aria-label="Orders">
+  <div class="dh">My orders <button class="x" data-close aria-label="Close">×</button></div>
+  <div class="db" id="ordBody"></div>
+</aside></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const P=[
+[1,"Pain relief","Paracetamol 500mg","Strip of 15 tablets",18,25,"💊",0],
+[2,"Pain relief","Ibuprofen 400mg","Strip of 10 tablets",32,42,"💊",0],
+[3,"Pain relief","Pain relief spray","Fast-acting, 55 g",145,190,"🧴",0],
+[4,"Pain relief","Tramadol 50mg","Strip of 10 capsules",96,120,"💊",1],
+[5,"Cold & Flu","Cough syrup (honey)","100 ml bottle",78,95,"🍯",0],
+[6,"Cold & Flu","Cetirizine 10mg","Strip of 10 tablets",24,30,"💊",0],
+[7,"Cold & Flu","Nasal decongestant","Drops, 10 ml",62,75,"💧",0],
+[8,"Cold & Flu","Azithromycin 500mg","Strip of 3 tablets",118,145,"💊",1],
+[9,"Vitamins","Vitamin C 500mg","60 chewable tablets",149,220,"🍊",0],
+[10,"Vitamins","Multivitamin daily","30 tablets",260,340,"🌿",0],
+[11,"Vitamins","Vitamin D3 60K","Pack of 4 capsules",92,115,"☀️",0],
+[12,"Vitamins","Omega-3 fish oil","60 softgels",399,550,"🐟",0],
+[13,"Diabetes care","Glucometer kit","Meter + 10 strips",799,1199,"🩸",0],
+[14,"Diabetes care","Sugar-free sweetener","100 tablets",110,130,"🍬",0],
+[15,"Diabetes care","Metformin 500mg","Strip of 20 tablets",28,35,"💊",1],
+[16,"Stomach","ORS electrolyte","Pack of 4 sachets",44,60,"🥤",0],
+[17,"Stomach","Antacid gel","170 ml bottle",105,125,"🧪",0],
+[18,"Stomach","Pantoprazole 40mg","Strip of 15 tablets",95,130,"💊",1],
+[19,"Skin care","Antiseptic liquid","250 ml bottle",119,140,"🧴",0],
+[20,"Skin care","Sunscreen SPF 50","50 g tube",340,450,"🧴",0],
+[21,"Skin care","Burn & wound cream","20 g tube",58,70,"🩹",0],
+[22,"Baby care","Baby diaper pants M","Pack of 40",549,799,"👶",0],
+[23,"Baby care","Baby gripe water","150 ml bottle",85,98,"🍼",0],
+[24,"Devices","Digital thermometer","Fast read, 10 sec",199,299,"🌡️",0],
+[25,"Devices","BP monitor (arm)","Automatic, memory",1399,2199,"🩺",0],
+[26,"Devices","Pulse oximeter","Fingertip, OLED",899,1499,"🫁",0],
+[27,"Devices","N95 masks","Pack of 5",120,180,"😷",0],
+[28,"Devices","First-aid kit","32-piece kit",299,420,"🧰",0]
+].map(a=>({id:a[0],cat:a[1],name:a[2],pack:a[3],price:a[4],mrp:a[5],e:a[6],rx:a[7]}));
+const CATS=["All",...new Set(P.map(p=>p.cat))];
+const $=s=>document.querySelector(s);
+const inr=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+let cart={},cat="All",query="",coupon="",orders=[],addr={name:"",phone:"",line:"",pin:""},pay="UPI",timers={},openTrack=null;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+cart=store.get("md_cart",{});orders=store.get("md_orders",[]);addr=store.get("md_addr",addr);
+const save=()=>{store.set("md_cart",cart);store.set("md_orders",orders);store.set("md_addr",addr)};
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display="none",2200)}
+const pid=id=>P.find(p=>p.id==id);
+
+function renderChips(){$("#chips").innerHTML=CATS.map(c=>`<button class="chip ${c==cat?"on":""}" role="tab" aria-selected="${c==cat}" data-cat="${c}">${c}</button>`).join("")}
+function ctl(p){const q=cart[p.id]||0;return q?`<div class="qty"><button data-dec="${p.id}" aria-label="Remove one">−</button><span>${q}</span><button data-inc="${p.id}" aria-label="Add one">+</button></div>`:`<button class="add" data-inc="${p.id}">Add</button>`}
+function renderGrid(){
+  const list=P.filter(p=>(cat=="All"||p.cat==cat)&&(p.name+p.cat+p.pack).toLowerCase().includes(query));
+  $("#ttl").textContent=query?`Results for “${query}”`:(cat=="All"?"All products":cat);
+  $("#grid").innerHTML=list.length?list.map(p=>`<article class="p"><div class="img">${p.rx?'<span class="rx">Rx</span>':''}<span class="off">${Math.round(100-p.price/p.mrp*100)}% off</span>${p.e}</div><h3>${p.name}</h3><small>${p.pack}</small><div class="row"><div class="price"><b>${inr(p.price)}</b><s>${inr(p.mrp)}</s></div><div data-ctl="${p.id}">${ctl(p)}</div></div></article>`).join(""):`<div class="empty" style="grid-column:1/-1">Nothing matches “${query}”. Try a medicine name or a category.</div>`;
+}
+function bill(){
+  let sub=0,mrp=0,n=0,rx=false;
+  for(const id in cart){const p=pid(id),q=cart[id];sub+=p.price*q;mrp+=p.mrp*q;n+=q;if(p.rx)rx=true}
+  const disc=coupon=="HEALTH10"?Math.round(sub*.1):0;
+  const del=sub==0?0:(sub>=499?0:25),hand=sub?5:0;
+  return{sub,mrp,n,rx,disc,del,hand,total:sub-disc+del+hand,save:mrp-sub+disc}
+}
+function renderCart(){
+  const b=bill();
+  $("#cartTxt").textContent=b.n?`${b.n} item${b.n>1?"s":""} · ${inr(b.total)}`:"Cart";
+  if(!b.n){$("#cartBody").innerHTML='<div class="empty">Your cart is empty.<br>Add medicines to get started.</div>';$("#cartFoot").innerHTML="";return}
+  $("#cartBody").innerHTML=Object.keys(cart).map(id=>{const p=pid(id);return`<div class="ci"><div class="e">${p.e}</div><div class="t">${p.name}${p.rx?' <span class="tag" style="background:var(--red);color:#fff">Rx</span>':''}<br><small style="color:var(--mut)">${p.pack}</small></div><div style="text-align:right"><div class="qty"><button data-dec="${id}" aria-label="Remove one">−</button><span>${cart[id]}</span><button data-inc="${id}" aria-label="Add one">+</button></div><b>${inr(p.price*cart[id])}</b></div></div>`}).join("")+
+  `<div class="coupon"><input id="cpn" placeholder="Coupon code (try HEALTH10)" value="${coupon}" aria-label="Coupon code"><button class="sm" id="cpnBtn">Apply</button></div>
+  <div class="bill"><div><span>Items total</span><span>${inr(b.sub)}</span></div>${b.disc?`<div><span>Coupon discount</span><span style="color:var(--pri)">−${inr(b.disc)}</span></div>`:""}<div><span>Delivery fee</span><span>${b.del?inr(b.del):"FREE"}</span></div><div><span>Handling charge</span><span>${inr(b.hand)}</span></div><div class="tot"><span>To pay</span><span>${inr(b.total)}</span></div></div>
+  ${b.del?`<p style="color:var(--mut);font-size:13px">Add ${inr(499-b.sub)} more for free delivery.</p>`:""}
+  ${b.rx?'<div class="note">Your cart has prescription (Rx) medicines. You will upload a valid prescription at checkout.</div>':""}`;
+  $("#cartFoot").innerHTML=`<div style="color:var(--pri);font-weight:700;margin-bottom:8px">You save ${inr(b.save)} on this order</div><button class="cta" id="goCo">Proceed to checkout · ${inr(b.total)}</button>`;
+}
+function refresh(){renderGrid();renderCart();save()}
+function change(id,d){const q=(cart[id]||0)+d;if(q<=0)delete cart[id];else cart[id]=Math.min(q,10);if(q>10)toast("Maximum 10 per item");refresh()}
+
+function open(id){$(id).classList.add("show")}
+function closeAll(){document.querySelectorAll(".ov").forEach(o=>o.classList.remove("show"));openTrack=null}
+
+function renderCheckout(err={}){
+  const b=bill();
+  $("#coBody").innerHTML=`<div style="padding:2px">
+  <label for="a1">Full name</label><input id="a1" value="${addr.name}" autocomplete="name">${err.name?`<div class="err">${err.name}</div>`:""}
+  <label for="a2">Mobile number</label><input id="a2" value="${addr.phone}" inputmode="numeric" maxlength="10" autocomplete="tel">${err.phone?`<div class="err">${err.phone}</div>`:""}
+  <label for="a3">Delivery address</label><textarea id="a3" rows="2" autocomplete="street-address">${addr.line}</textarea>${err.line?`<div class="err">${err.line}</div>`:""}
+  <label for="a4">PIN code</label><input id="a4" value="${addr.pin}" inputmode="numeric" maxlength="6">${err.pin?`<div class="err">${err.pin}</div>`:""}
+  ${b.rx?`<label for="a5">Upload prescription (required)</label><input id="a5" type="file" accept="image/*,.pdf">${err.rx?`<div class="err">${err.rx}</div>`:""}`:""}
+  <label>Payment method</label>
+  <div class="pay">${["UPI","Card","Cash"].map(m=>`<label><input type="radio" name="pay" value="${m}" ${pay==m?"checked":""}><span>${m=="Cash"?"Cash on delivery":m}</span></label>`).join("")}</div>
+  <div class="bill"><div class="tot"><span>Total to pay</span><span>${inr(b.total)}</span></div></div>
+  <button class="cta" id="place" style="margin-top:14px">Place order · ${inr(b.total)}</button></div>`;
+}
+function placeOrder(){
+  const b=bill();
+  addr={name:$("#a1").value.trim(),phone:$("#a2").value.trim(),line:$("#a3").value.trim(),pin:$("#a4").value.trim()};
+  pay=(document.querySelector('input[name=pay]:checked')||{}).value||pay;
+  const e={};
+  if(addr.name.length<2)e.name="Enter your full name.";
+  if(!/^[6-9]\d{9}$/.test(addr.phone))e.phone="Enter a valid 10-digit mobile number.";
+  if(addr.line.length<8)e.line="Enter your full address with house number and area.";
+  if(!/^\d{6}$/.test(addr.pin))e.pin="Enter a 6-digit PIN code.";
+  const f=$("#a5");if(b.rx&&(!f||!f.files.length))e.rx="Upload a photo or PDF of the prescription.";
+  if(Object.keys(e).length){renderCheckout(e);return}
+  const o={id:"MD"+Date.now().toString().slice(-7),items:Object.keys(cart).map(id=>({id,q:cart[id]})),total:b.total,pay,addr:{...addr},t:Date.now(),eta:Date.now()+36000,rx:b.rx};
+  orders.unshift(o);cart={};coupon="";$("#locTxt").textContent=addr.line.slice(0,24)+"…";refresh();closeAll();showTrack(o.id);
+}
+const STEPS=[["Order confirmed",0],["Pharmacist packing your order",8000],["Rider out for delivery",18000],["Delivered",36000]];
+function stage(o){const el=Date.now()-o.t;let s=0;STEPS.forEach((x,i)=>{if(el>=x[1])s=i});return s}
+function showTrack(id){
+  const o=orders.find(x=>x.id==id);if(!o)return;openTrack=id;closeAll();openTrack=id;open("#trOv");
+  $("#trTitle").textContent="Order #"+o.id;drawTrack();
+}
+function drawTrack(){
+  const o=orders.find(x=>x.id==openTrack);if(!o)return;
+  const s=stage(o),left=Math.max(0,Math.ceil((o.eta-Date.now())/1000)),pct=Math.min(1,Math.max(0,(Date.now()-o.t-18000)/18000));
+  const x=40+pct*(s>=2?320:0),y=150-Math.sin(pct*Math.PI)*60-pct*60;
+  const mins=Math.max(1,Math.ceil(left/6));
+  $("#trBody").innerHTML=`<div class="eta">${s==3?"Delivered 🎉":`Arriving in ${mins} min`}</div>
+  <p style="margin:2px 0 12px;color:var(--mut)">${s==3?"Thank you for ordering with MediDash.":"Your rider is on the way. Keep your phone handy."}</p>
+  <div class="map"><svg viewBox="0 0 400 190" width="100%" role="img" aria-label="Delivery route map"><path d="M40 150 C120 60,220 140,360 70" fill="none" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/><path d="M40 150 C120 60,220 140,360 70" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${s>=3?400:pct*400} 400"/><text x="22" y="176" font-size="22">🏥</text><text x="346" y="62" font-size="24">🏠</text>${s>=2&&s<3?`<g transform="translate(${motion(pct).x},${motion(pct).y})"><circle r="15" fill="var(--acc)"/><text x="-9" y="7" font-size="17">🛵</text></g>`:""}</svg></div>
+  <ul class="steps">${STEPS.map((st,i)=>`<li class="${i<=s?"done":""}"><i>${i<=s?"✓":""}</i>${st[0]}</li>`).join("")}</ul>
+  <div class="bill"><div class="tot"><span>${o.items.reduce((a,i)=>a+i.q,0)} items · ${o.pay}</span><span>${inr(o.total)}</span></div><div style="display:block;font-size:13px">Delivering to ${o.addr.line}, ${o.addr.pin}</div></div>`;
+}
+function motion(t){const u=1-t;return{x:u*u*u*40+3*u*u*t*120+3*u*t*t*220+t*t*t*360,y:u*u*u*150+3*u*u*t*60+3*u*t*t*140+t*t*t*70}}
+function renderOrders(){
+  $("#ordBody").innerHTML=orders.length?orders.map(o=>{const s=stage(o);return`<div class="ord"><div class="top"><span>#${o.id}</span><span class="tag">${STEPS[s][0]==="Delivered"?"Delivered":"In progress"}</span></div><p>${new Date(o.t).toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"})} · ${inr(o.total)}</p><p>${o.items.map(i=>pid(i.id).name+" ×"+i.q).join(", ")}</p><div style="display:flex;gap:8px;margin-top:8px"><button class="sm" data-track="${o.id}">${s<3?"Track order":"View details"}</button><button class="sm" style="background:var(--tile);color:var(--ink)" data-again="${o.id}">Reorder</button></div></div>`}).join(""):'<div class="empty">No orders yet.<br>Your orders will show up here.</div>';
+}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button,[data-close]");
+  if(e.target.classList.contains("ov")){closeAll();return}
+  if(!t)return;
+  const d=t.dataset;
+  if(d.inc)change(d.inc,1);else if(d.dec)change(d.dec,-1);
+  else if(d.cat!==undefined){cat=d.cat;renderChips();renderGrid()}
+  else if(t.hasAttribute("data-close"))closeAll();
+  else if(t.id=="cartBtn"){renderCart();open("#cartOv")}
+  else if(t.id=="ordBtn"){renderOrders();open("#ordOv")}
+  else if(t.id=="goCo"){closeAll();renderCheckout();open("#coOv")}
+  else if(t.id=="place")placeOrder();
+  else if(t.id=="cpnBtn"){const v=$("#cpn").value.trim().toUpperCase();if(v=="HEALTH10"){coupon=v;toast("Coupon applied: 10% off")}else{coupon="";toast("Invalid coupon code")}renderCart()}
+  else if(t.id=="locBtn"){const v=prompt("Enter your delivery area or PIN code",addr.line);if(v){addr.line=v;$("#locTxt").textContent=v.slice(0,24);save()}}
+  else if(d.track){closeAll();showTrack(d.track)}
+  else if(d.again){const o=orders.find(x=>x.id==d.again);o.items.forEach(i=>cart[i.id]=(cart[i.id]||0)+i.q);refresh();closeAll();renderCart();open("#cartOv")}
+});
+$("#q").addEventListener("input",e=>{query=e.target.value.trim().toLowerCase();renderGrid()});
+document.addEventListener("keydown",e=>{if(e.key=="Escape")closeAll()});
+setInterval(()=>{if(openTrack)drawTrack();if($("#ordOv").classList.contains("show"))renderOrders()},1000);
+if(addr.line)$("#locTxt").textContent=addr.line.slice(0,24)+"…";
+renderChips();refresh();
+</script>
+</body>
+</html>
